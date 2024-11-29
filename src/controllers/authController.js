@@ -14,7 +14,7 @@ exports.register = async (req, res) => {
 }
 
 exports.login = async (req, res) => {
-    const {emai, password} = req.body;
+    const {email, password} = req.body;
     try{
         const user = await User.findOne({where: {email}});
         if(!user) return res.status(404).json({error: "User not found!"});
@@ -23,7 +23,7 @@ exports.login = async (req, res) => {
         if(!isMatch) return res.status(404).json({error: "Invalid Password"});
 
         const token = jwt.sign({userId: user.id}, process.env.JWT_SECRET, {expiresIn: '1h'});
-        res.status(200).json({message: "Success on Login!"});
+        res.status(200).json({message: "Success on Login!", token});
     }catch(error){
         res.status(500).jason({error: `Error on login: ${error}`});
     }
